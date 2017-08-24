@@ -1,0 +1,115 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="my-icons.html">
+
+<!-- <link rel="lazy-import" href="my-view1.html">
+<link rel="lazy-import" href="my-view2.html">
+<link rel="lazy-import" href="my-view3.html">
+<link rel="lazy-import" href="my-view4.html">
+<link rel="lazy-import" href="my-view404.html"> -->
+
+<dom-module id="my-app">
+  <template>
+    <style>
+       :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      a.iron-selected {
+        color: red;
+      }
+    </style>
+
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
+    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation">
+      <template is="dom-repeat" items="{{primaryNav}}">
+        <a name="[[item.name]]" href="[[rootPath]][[item.href]]">[[item.context]]</a>
+      </template>
+    </iron-selector>
+
+    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+      <app-about name="about"></app-about>
+      <app-contact name="contact"></app-contact>
+      <my-view404 name="view404"></my-view404>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    class MyApp extends Polymer.Element {
+      static get is() { return 'my-app'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          primaryNav: {
+            type: Array,
+            value: [{
+              context: 'Tomas Jonsgarden',
+              name: '',
+              href: ''
+            }, {
+              context: 'Commercial',
+              name: 'commercial',
+              href: 'commercial'
+            }, {
+              context: 'Narrative',
+              name: 'narrative',
+              href: 'narrative'
+            }, {
+              context: 'Photography',
+              name: 'photography',
+              href: 'photography'
+            }]
+          },
+          routeData: Object,
+          subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+        this.page = page || 'view1';
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('app-' + page + '.html');
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+    }
+
+    window.customElements.define(MyApp.is, MyApp);
+  </script>
+</dom-module>

@@ -1,0 +1,22 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="app-about">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+    </style>
+
+    <h1>About</h1>
+  </template>
+
+  <script>
+    class AppAbout extends Polymer.Element {
+      static get is() { return 'app-about'; }
+    }
+
+    window.customElements.define(AppAbout.is, AppAbout);
+  </script>
+</dom-module>
