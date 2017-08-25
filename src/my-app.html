@@ -11,8 +11,9 @@
 
 <link rel="import" href="my-icons.html">
 
-<link rel="import" href="comp-jumbotron.html">
-<link rel="import" href="comp-thumbs.html">
+<link rel="import" href="x-jumbotron.html">
+<link rel="import" href="x-loader.html">
+<link rel="import" href="x-thumbs.html">
 
 <dom-module id="my-app">
   <template>
@@ -25,6 +26,7 @@
       }
 
       a {
+        color: var(--app-primary-color);
         text-decoration: none;
       }
 
@@ -61,30 +63,40 @@
       params='{"alt":"json", "kind": "photo"}' handle-as="json" last-response="{{photos}}" debounce-duration="300"></iron-ajax>
 
     <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="fallback" role="main">
-      <iron-page name="">
-        <comp-jumbotron items="[[jumbotronVideos.data]]"></comp-jumbotron>
-        <comp-thumbs items="[[featureVideos.data]]"></comp-thumbs>
-        <comp-bio>bio</comp-bio>
-        <comp-contact>contact</comp-contact>
-      </iron-page>
-      <iron-page name="commercial">
-        <comp-thumbs items="[[commercialVideos.data]]"></comp-thumbs>
-      </iron-page>
-      <iron-page name="narrative">
-        <comp-thumbs items="[[narrativeVideos.data]]"></comp-thumbs>
-      </iron-page>
-      <iron-page name="photography">
-        <comp-thumbs items="[[photos.feed.entry]]"></comp-thumbs>
-      </iron-page>
-      <iron-page name="bio">
-        <comp-bio>bio</comp-bio>
-      </iron-page>
-      <iron-page name="contact">
-        <comp-contact>contact</comp-contact>
-      </iron-page>
-      <iron-page name="fallback">
-        <comp-404>404</comp-404>
-      </iron-page>
+      <x-page name="">
+        <x-jumbotron items="[[jumbotronVideos.data]]">
+          <x-loader></x-loader>
+        </x-jumbotron>
+        <x-thumbs items="[[featureVideos.data]]">
+          <x-loader></x-loader>
+        </x-thumbs>
+        <x-bio>bio</x-bio>
+        <x-contact>contact</x-contact>
+      </x-page>
+      <x-page name="commercial">
+        <x-thumbs items="[[commercialVideos.data]]">
+          <x-loader></x-loader>
+        </x-thumbs>
+      </x-page>
+      <x-page name="narrative">
+        <x-thumbs items="[[narrativeVideos.data]]">
+          <x-loader></x-loader>
+        </x-thumbs>
+      </x-page>
+      <x-page name="photography">
+        <x-thumbs items="[[photos.feed.entry]]">
+          <x-loader></x-loader>
+        </x-thumbs>
+      </x-page>
+      <x-page name="bio">
+        <x-bio>bio</x-bio>
+      </x-page>
+      <x-page name="contact">
+        <x-contact>contact</x-contact>
+      </x-page>
+      <x-page name="fallback">
+        <x-404>404</x-404>
+      </x-page>
     </iron-pages>
     <footer>
       <small>® Copyrighted.</small>

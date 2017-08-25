@@ -1,0 +1,38 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="x-jumbotron">
+  <template>
+    <style include="shared-styles"></style>
+    <slot></slot>
+    <template is="dom-repeat" items="[[items]]">
+      <div>[[item.name]] [[item.title.$t]] [[item.description]]</div>
+    </template>
+  </template>
+
+  <script>
+    class XJumbotron extends Polymer.Element {
+      static get is() { return 'x-jumbotron'; }
+      static get properties() {
+        return {
+          items: {
+            type: Array,
+            observer: '_itemsChanged',
+          },
+          routeData: Object,
+          subroute: String,
+          rootPath: String,
+        };
+      }
+
+      _itemsChanged(items) {
+        if (items.length) {
+          Polymer.dom(this).querySelector('x-loader').remove()
+        }
+
+      }
+    }
+
+    window.customElements.define(XJumbotron.is, XJumbotron);
+  </script>
+</dom-module>
