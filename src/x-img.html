@@ -1,0 +1,25 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="x-img">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+      /* .loaders{
+        position: absolute;
+        z-index: -1;
+      } */
+    </style>
+      <div class="loaders"></div><img src=[[src]] alt="">
+  </template>
+
+  <script>
+    class XImg extends Polymer.Element {
+      static get is() { return 'x-img'; }
+    }
+
+    window.customElements.define(XImg.is, XImg);
+  </script>
+</dom-module>
