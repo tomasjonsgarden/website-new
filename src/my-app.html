@@ -3,16 +3,15 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./iron-page.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="my-icons.html">
 
-<!-- <link rel="lazy-import" href="my-view1.html">
-<link rel="lazy-import" href="my-view2.html">
-<link rel="lazy-import" href="my-view3.html">
-<link rel="lazy-import" href="my-view4.html">
-<link rel="lazy-import" href="my-view404.html"> -->
+<link rel="import" href="comp-thumbs.html">
 
 <dom-module id="my-app">
   <template>
@@ -24,26 +23,72 @@
         display: block;
       }
 
+      a {
+        text-decoration: none;
+      }
+
       a.iron-selected {
-        color: red;
+        text-decoration: underline;
       }
     </style>
 
-    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
-    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <app-location route="{{route}}" url-space-regex="^/"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
-    <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation">
-      <template is="dom-repeat" items="{{primaryNav}}">
-        <a name="[[item.name]]" href="[[rootPath]][[item.href]]">[[item.context]]</a>
-      </template>
+    <iron-selector selected="[[routeData.page]]" attr-for-selected="name" role="navigation">
+      <a name="/" href="/">Tomas Jonsgarden</a>
+      <a name="commercial" href="/commercial">Commercial</a>
+      <a name="narrative" href="/narrative">Narrative</a>
+      <a name="photography" href="/photography">Photography</a>
     </iron-selector>
 
-    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-      <app-about name="about"></app-about>
-      <app-contact name="contact"></app-contact>
-      <my-view404 name="view404"></my-view404>
-    </iron-pages>
+    <iron-selector selected="[[routeData.page]]" attr-for-selected="name" role="navigation">
+      <a name="bio" href="/bio">Bio</a>
+      <a name="contact" href="/contact">Contact</a>
+      <a name="instagram" href="https://www.instagram.com/jonsgarden">Instagram</a>
+    </iron-selector>
 
+    <iron-ajax auto url="https://api.vimeo.com/me/albums/3674768/videos" params='{"sort":"manual", "per_page":50, "access_token": "5329144dd1b697d05bbf580d3b10c6d3"}'
+      handle-as="json" last-response="{{jumbotronVideos}}" debounce-duration="300"></iron-ajax>
+    <iron-ajax auto url="https://api.vimeo.com/me/albums/2334700/videos" params='{"sort":"manual", "per_page":50, "access_token": "5329144dd1b697d05bbf580d3b10c6d3"}'
+      handle-as="json" last-response="{{featureVideos}}" debounce-duration="300"></iron-ajax>
+    <iron-ajax auto url="https://api.vimeo.com/me/albums/2329074/videos" params='{"sort":"manual", "per_page":50, "access_token": "5329144dd1b697d05bbf580d3b10c6d3"}'
+      handle-as="json" last-response="{{commercialVideos}}" debounce-duration="300"></iron-ajax>
+    <iron-ajax auto url="https://api.vimeo.com/me/albums/2329080/videos" params='{"sort":"manual", "per_page":50, "access_token": "5329144dd1b697d05bbf580d3b10c6d3"}'
+      handle-as="json" last-response="{{narrativeVideos}}" debounce-duration="300"></iron-ajax>
+    <iron-ajax auto url="https://picasaweb.google.com/data/feed/base/user/115234932010059601425/albumid/6218961437089181137"
+      params='{"alt":"json", "kind": "photo"}' handle-as="json" last-response="{{photos}}" debounce-duration="300"></iron-ajax>
+
+    <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="fallback" role="main">
+      <iron-page name="">
+        <comp-jumbotron>jumbotron</comp-jumbotron>
+        <comp-thumbs items="[[featureVideos.data]]"></comp-thumbs>
+        <comp-bio>bio</comp-bio>
+        <comp-contact>contact</comp-contact>
+      </iron-page>
+      <iron-page name="commercial">
+        <comp-thumbs items="[[commercialVideos.data]]"></comp-thumbs>
+      </iron-page>
+      <iron-page name="narrative">
+        <comp-thumbs items="[[narrativeVideos.data]]"></comp-thumbs>
+      </iron-page>
+      <iron-page name="photography">
+        <comp-thumbs items="[[photos.feed.entry]]">thumbs photography</comp-thumbs>
+      </iron-page>
+      <iron-page name="bio">
+        <comp-bio>bio</comp-bio>
+      </iron-page>
+      <iron-page name="contact">
+        <comp-contact>contact</comp-contact>
+      </iron-page>
+      <iron-page name="fallback">
+        <comp-404>404</comp-404>
+      </iron-page>
+    </iron-pages>
+    <footer>
+      <small>® Copyrighted.</small>
+    </footer>
+    <iron-icon icon="my-icons:menu"></iron-icon>
   </template>
 
   <script>
@@ -52,61 +97,9 @@
 
       static get properties() {
         return {
-          page: {
-            type: String,
-            reflectToAttribute: true,
-            observer: '_pageChanged',
-          },
-          primaryNav: {
-            type: Array,
-            value: [{
-              context: 'Tomas Jonsgarden',
-              name: '',
-              href: ''
-            }, {
-              context: 'Commercial',
-              name: 'commercial',
-              href: 'commercial'
-            }, {
-              context: 'Narrative',
-              name: 'narrative',
-              href: 'narrative'
-            }, {
-              context: 'Photography',
-              name: 'photography',
-              href: 'photography'
-            }]
-          },
           routeData: Object,
           subroute: String,
-          // This shouldn't be neccessary, but the Analyzer isn't picking up
-          // Polymer.Element#rootPath
-          rootPath: String,
         };
-      }
-
-      static get observers() {
-        return [
-          '_routePageChanged(routeData.page)',
-        ];
-      }
-
-      _routePageChanged(page) {
-        this.page = page || 'view1';
-      }
-
-      _pageChanged(page) {
-        // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('app-' + page + '.html');
-        Polymer.importHref(
-          resolvedPageUrl,
-          null,
-          this._showPage404.bind(this),
-          true);
-      }
-
-      _showPage404() {
-        this.page = 'view404';
       }
     }
 

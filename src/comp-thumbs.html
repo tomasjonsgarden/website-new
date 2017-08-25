@@ -1,0 +1,84 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="comp-thumbs">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+
+      .loader {
+        height: 4px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #ddd;
+      }
+
+      .loader:before {
+        display: block;
+        position: absolute;
+        content: "";
+        left: -200px;
+        width: 200px;
+        height: 4px;
+        background-color: #2980b9;
+        animation: loading 2s linear infinite;
+      }
+
+      @keyframes loading {
+        from {
+          left: -200px;
+          width: 30%;
+        }
+        50% {
+          width: 30%;
+        }
+        70% {
+          width: 70%;
+        }
+        80% {
+          left: 50%;
+        }
+        95% {
+          left: 120%;
+        }
+        to {
+          left: 100%;
+        }
+      }
+    </style>
+    <slot></slot>
+    <div class="loader"></div>
+    <template is="dom-repeat" items="[[items]]">
+      <div>[[item.name]] [[item.title.$t]] [[item.description]]</div>
+    </template>
+  </template>
+
+  <script>
+    class CompThumbs extends Polymer.Element {
+      static get is() { return 'comp-thumbs'; }
+      static get properties() {
+        return {
+          items: {
+            type: Array,
+            observer: '_itemsChanged',
+          },
+          routeData: Object,
+          subroute: String,
+          rootPath: String,
+        };
+      }
+
+      _itemsChanged(items) {
+        if (items.length) {
+          Polymer.dom(this.root).querySelector('div.loader').remove();
+        }
+
+      }
+    }
+
+    window.customElements.define(CompThumbs.is, CompThumbs);
+  </script>
+</dom-module>

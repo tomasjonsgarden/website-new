@@ -1,22 +1,21 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="app-about">
+<dom-module id="iron-page">
   <template>
     <style include="shared-styles">
        :host {
         display: block;
       }
     </style>
-
-    <h1>About</h1>
+    <slot></slot>
   </template>
 
   <script>
-    class AppAbout extends Polymer.Element {
-      static get is() { return 'app-about'; }
+    class IronPage extends Polymer.Element {
+      static get is() { return 'iron-page'; }
     }
 
-    window.customElements.define(AppAbout.is, AppAbout);
+    window.customElements.define(IronPage.is, IronPage);
   </script>
 </dom-module>
