@@ -5,17 +5,17 @@
 
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/byutv-jsonp/byutv-jsonp.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="./iron-page.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="my-icons.html">
 
+<link rel="import" href="x-page.html">
 <link rel="import" href="x-jumbotron.html">
 <link rel="import" href="x-loader.html">
 <link rel="import" href="x-thumbs.html">
 
-<dom-module id="my-app">
+<dom-module id="x-app">
   <template>
     <style>
        :host {
@@ -105,8 +105,8 @@
   </template>
 
   <script>
-    class MyApp extends Polymer.Element {
-      static get is() { return 'my-app'; }
+    class XApp extends Polymer.Element {
+      static get is() { return 'x-app'; }
 
       static get properties() {
         return {
@@ -116,6 +116,6 @@
       }
     }
 
-    window.customElements.define(MyApp.is, MyApp);
+    window.customElements.define(XApp.is, XApp);
   </script>
 </dom-module>
