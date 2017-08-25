@@ -11,6 +11,7 @@
 
 <link rel="import" href="my-icons.html">
 
+<link rel="import" href="comp-jumbotron.html">
 <link rel="import" href="comp-thumbs.html">
 
 <dom-module id="my-app">
@@ -61,7 +62,7 @@
 
     <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="fallback" role="main">
       <iron-page name="">
-        <comp-jumbotron>jumbotron</comp-jumbotron>
+        <comp-jumbotron items="[[jumbotronVideos.data]]"></comp-jumbotron>
         <comp-thumbs items="[[featureVideos.data]]"></comp-thumbs>
         <comp-bio>bio</comp-bio>
         <comp-contact>contact</comp-contact>
@@ -73,7 +74,7 @@
         <comp-thumbs items="[[narrativeVideos.data]]"></comp-thumbs>
       </iron-page>
       <iron-page name="photography">
-        <comp-thumbs items="[[photos.feed.entry]]">thumbs photography</comp-thumbs>
+        <comp-thumbs items="[[photos.feed.entry]]"></comp-thumbs>
       </iron-page>
       <iron-page name="bio">
         <comp-bio>bio</comp-bio>
