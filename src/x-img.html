@@ -2,24 +2,32 @@
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="x-img">
-  <template>
+    <template>
     <style include="shared-styles">
        :host {
         display: block;
       }
-      /* .loaders{
+      .loaders{
         position: absolute;
-        z-index: -1;
-      } */
+        /* z-index: -1; */
+      }
     </style>
-      <div class="loaders"></div><img src=[[src]] alt="">
-  </template>
+    <template is="dom-if" if="[[!loaded]]">
+      <div class="loaders"></div>
+    </template>
+    <img src=[[src]] alt="" on-load="onLoadHandler">
+    </template>
 
-  <script>
-    class XImg extends Polymer.Element {
-      static get is() { return 'x-img'; }
-    }
+    <script>
+        class XImg extends Polymer.Element {
+            static get is() {
+                return 'x-img';
+            }
+            onLoadHandler() {
+                this.loaded = true
+            }
+        }
 
-    window.customElements.define(XImg.is, XImg);
-  </script>
+        window.customElements.define(XImg.is, XImg);
+    </script>
 </dom-module>
